@@ -1,0 +1,1019 @@
+---
+title: Introduction to R
+teaching: 50
+exercises: 30
+source: Rmd
+---
+
+:::: instructor
+
+- The main goal is to introduce users to the various objects in R, from atomic 
+  types to creating your own objects.
+- While this episode is foundational, be careful not to get caught in the weeds 
+  as the variety of types and operations can be overwhelming for new users, especially 
+  before they understand how this fits into their own "workflow."
+
+::::::::::::
+
+::::::::::::::::::::::::::::::::::::::: objectives
+
+- Define the following terms as they relate to R: object, assign, call, function, arguments, options.
+- Assign values to names in R.
+- Learn how to name objects.
+- Use comments to inform script.
+- Solve simple arithmetic operations in R.
+- Call functions and use arguments to change their default options.
+- Inspect the content of vectors and manipulate their content.
+- Subset values from vectors.
+- Analyze vectors with missing data.
+- Work with dates and times in R using proper data types.
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:::::::::::::::::::::::::::::::::::::::: questions
+
+- What data types are available in R?
+- What is an object?
+- How can objects of different data types be assigned to names?
+- What arithmetic and logical operators can be used?
+- How can subsets be extracted from vectors?
+- How does R treat missing values?
+- How can we deal with missing values in R?
+- How can we work with dates and times in R?
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+## Creating Objects in R
+
+You can get output from R simply by typing math in the console:
+
+
+``` r
+3 + 5
+```
+
+``` output
+[1] 8
+```
+
+``` r
+12 / 7
+```
+
+``` output
+[1] 1.714286
+```
+
+Everything that exists in `R` is an objects: from simple numerical values, to strings, to more complex objects like vectors, matrices, and lists. Even expressions and functions are objects in `R`.
+
+However, to do useful and interesting things, we need to name objects. To do so, we need to give a *name* followed by the assignment operator `<-`, and the *object* we want to be named:
+
+
+``` r
+num_precincts <- 5
+```
+
+`<-` is the assignment operator. It assigns values (objects) on the right to names (also called *symbols*) on
+the left. So, after executing `x <- 3`, the value of `x` is `3`. The arrow can
+be read as 3 **goes into** `x`.  For historical reasons, you can also use `=`
+for assignments, but not in every context. Because of the
+[slight differences](https://blog.revolutionanalytics.com/2008/12/use-equals-or-arrow-for-assignment.html)
+in syntax, it is good practice to always use `<-` for assignments. More
+generally we prefer the `<-` syntax over `=` because it makes it clear what
+direction the assignment is operating (left assignment), and it increases the
+read-ability of the code.
+
+In RStudio, typing <kbd>Alt</kbd> + <kbd>\-</kbd> (push <kbd>Alt</kbd> at the
+same time as the <kbd>\-</kbd> key) will write `<- ` in a single keystroke in a
+PC, while typing <kbd>Option</kbd> + <kbd>\-</kbd> (push <kbd>Option</kbd> at the
+same time as the <kbd>\-</kbd> key) does the same in a Mac.
+
+Objects can be given any name such as `x`, `current_temperature`, or
+`subject_id`. You want your object names to be explicit and not too long. They
+cannot start with a number (`2x` is not valid, but `x2` is). R is case sensitive
+(e.g., `age` is different from `Age`). There are some names that
+cannot be used because they are the names of fundamental objects in R (e.g.,
+`if`, `else`, `for`, see
+[R's reserved words](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html)
+for a complete list). In general, even if it's allowed, it's best to not use
+them (e.g., `c`, `T`, `mean`, `data`, `df`, `weights`). If in
+doubt, check the help to see if the name is already in use. It's also best to
+avoid dots (`.`) within an object name as in `my.dataset`. There are many
+objects in R with dots in their names for historical reasons, but because dots
+have a special meaning in R (for methods) and other programming languages, it's
+best to avoid them. The recommended writing style is called snake\_case, which
+implies using only lowercase letters and numbers and separating each word with
+underscores (e.g., animals\_weight, average\_income). It is also recommended to 
+use nouns for object names, and verbs for function names. It's important to be 
+consistent in the styling of your code (where you put spaces, how you name objects, 
+etc.). Using a consistent coding style makes your code clearer to read for your 
+future self and yourcollaborators. In R, three popular style guides are
+[Google's](https://google.github.io/styleguide/Rguide.xml), [Jean
+Fan's](https://jef.works/R-style-guide/) and the
+[tidyverse's](https://style.tidyverse.org/). The tidyverse's is very
+comprehensive and may seem overwhelming at first. You can install the
+[**`lintr`**](https://github.com/jimhester/lintr) package to automatically check
+for issues in the styling of your code.
+
+:::::::::::::::::::::::::::::::::::::::::  callout
+
+## Objects vs. Variables
+
+The naming of objects in `R` is somehow related to `variables` in many other
+programming languages. In many programming languages, a variable has three aspects: a name, a memory location, and the current value stored in this location. `R` abstracts from modifiable memory locations. In `R` we only have objects which can be named.
+Depending on the context, `name (of an object)` and `variable` can
+have drastically different meanings. However, in this lesson, the two words
+are used synonymously. For more information see:
+[https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Objects](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Objects)
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+When assigning an value to a name, R does not print anything. You
+can force R to print the value by using parentheses or by typing
+the object name:
+
+
+``` r
+num_precincts <- 5    # doesn't print anything
+(num_precincts <- 5)  # putting parenthesis around the call prints the value of `area_hectares`
+```
+
+``` output
+[1] 5
+```
+
+``` r
+num_precincts         # and so does typing the name of the object
+```
+
+``` output
+[1] 5
+```
+
+Now that R has `num_precincts` in memory, we can do arithmetic with it. For
+instance, we may want to calculate the number of registered voters (assuming 
+there are 1500 voters per precinct):
+
+``` r
+1500 * num_precincts
+```
+
+``` output
+[1] 7500
+```
+
+We can also change an the value assigned to an name by assigning it a new one:
+
+``` r
+num_precincts <- 10
+1500 * num_precincts
+```
+
+``` output
+[1] 15000
+```
+
+This means that assigning a value to one name does not change the values of
+other names. For example, let's name the number of voters `num_voters`:
+
+``` r
+num_voters <- 1500 * num_precincts
+```
+
+Next, let's change (reassign) `num_precincts` to 50:
+
+``` r
+num_precincts <- 50
+```
+
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+## Exercise
+
+What do you think is the current value of `num_voters`? 15000 or 75000?
+
+:::::::::::::::  solution
+
+## Solution
+
+The value of `num_voters` is still 15000. This is because you have not
+re-run the line `num_voters <- 1500 * num_precincts` since
+changing the value of `num_precincts`.
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+## Comments
+
+All programming languages allow the programmer to include comments in their code. Including comments to your code has many advantages: it helps you explain your reasoning and it forces you to be tidy. A commented code is also a great tool not only to your collaborators, but to your future self. Comments are the key to a reproducible analysis.
+
+To do this in R we use the `#` character.
+Anything to the right of the `#` sign and up to the end of the line is treated as a comment and is ignored by R. You can start lines with comments
+or include them after any code on the line.
+
+
+``` r
+num_precincts <- 10			#number of precincts
+num_voters <- 1500 * num_precincts	#calculate the total number of voters
+num_voters				#print the total number of voters
+```
+
+``` output
+[1] 15000
+```
+
+RStudio makes it easy to comment or uncomment a paragraph: after selecting the
+lines you  want to comment, press at the same time on your keyboard
+<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>. If you only want to comment
+out one line, you can put the cursor at any location of that line (i.e. no need
+to select the whole line), then press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> +
+<kbd>C</kbd>.
+
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+## Exercise
+
+1. Create two variables `ballot_cost` and `ballots_needed` and assign them values.
+
+2. Create a third variable `total_cost` and give it a value based on the current 
+   values of `ballot_cost` and `ballots_needed`.
+
+3. Show that changing the values of either `ballot_cost` and `ballots_needed` does 
+   not affect the value of `total_cost`.
+
+:::::::::::::::  solution
+
+## Solution
+
+
+``` r
+#set the values of ballot_cost and ballots_needed
+ballot_cost <- 0.0125
+ballots_needed <- 2250
+
+#give total_cost a value
+total_cost <- ballot_cost * ballots_needed
+
+#print current value of total_cost
+total_cost
+```
+
+``` output
+[1] 28.125
+```
+
+``` r
+#change the values of ballot_cost and ballots_needed
+ballot_cost <- 0.068
+ballots_needed <- 3000
+
+#display the value of total_cost isn't changed
+total_cost
+```
+
+``` output
+[1] 28.125
+```
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+### Functions and Their Arguments
+
+Functions are "canned scripts" that automate more complicated sets of commands
+including operations assignments, etc. Many functions are predefined, or can be
+made available by importing R *packages* (more on that later). A function
+usually gets one or more inputs called *arguments*. Functions often (but not
+always) return a *value*. A typical example would be the function `sqrt()`. The
+input (the argument) must be a number, and the return value (in fact, the
+output) is the square root of that number. Executing a function ('running it')
+is called *calling* the function. An example of a function call is:
+
+
+``` r
+b <- sqrt(a)
+```
+
+Here, the value of `a` is given to the `sqrt()` function, the `sqrt()` function
+calculates the square root, and returns the value which is then assigned to
+the name `b`. This function is very simple, because it takes just one argument.
+
+The return 'value' of a function need not be numerical (like that of `sqrt()`),
+and it also does not need to be a single item: it can be a set of things, or
+even a data set. We'll see that when we read data files into R.
+
+Arguments can be anything, not only numbers or file names, but also other
+objects. Exactly what each argument means differs per function, and must be
+looked up in the documentation (see below). Some functions take arguments which
+may either be specified by the user, or, if left out, take on a *default* value:
+these are called *options*. Options are typically used to alter the way the
+function operates, such as whether it ignores 'bad values', or what symbol to
+use in a plot.  However, if you want something specific, you can specify a value
+of your choice which will be used instead of the default.
+
+Using the total_cost we calculated above, let's try a function that can take multiple 
+arguments: `round()`.
+
+``` r
+round(total_cost)
+```
+
+``` output
+[1] 28
+```
+
+Here, we've called `round()` with just one argument, `total_cost`, and it has
+returned the value `28`.  That's because the default is to round to the nearest
+whole number. If we want more digits we can see how to do that by getting
+information about the `round` function.  We can use `args(round)` or look at the
+help for this function using `?round`.
+
+
+``` r
+args(round)
+```
+
+``` output
+function (x, digits = 0, ...) 
+NULL
+```
+
+
+``` r
+?round
+```
+
+We see that if we want a different number of digits, we can
+type `digits=2` or however many we want.
+
+
+``` r
+round(total_cost, digits = 2)
+```
+
+``` output
+[1] 28.12
+```
+
+If you provide the arguments in the exact same order as they are defined you
+don't have to name them:
+
+
+``` r
+round(total_cost, 2)
+```
+
+``` output
+[1] 28.12
+```
+
+And if you do name the arguments, you can switch their order:
+
+``` r
+round(digits = 2, x = total_cost)
+```
+
+``` output
+[1] 28.12
+```
+
+It's good practice to put the non-optional arguments (like the number you're
+rounding) first in your function call, and to specify the names of all optional
+arguments.  If you don't, someone reading your code might have to look up the
+definition of a function with unfamiliar arguments to understand what you're
+doing.
+
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+## Exercise
+
+As you may have noticed, in both cases of rounding, the total_cost rounded down. 
+However, when calculating the total cost of something, you should always round UP 
+to the nearest dollar or cent. 
+
+For this exercise, type in `?round` at the console and then look at the output 
+in the Help panel. What other function similar to `round` should be used instead? 
+Apply this function to round up to the nearest *dollar*.
+
+Bonus: apply this function to round to the nearest *cent*.
+
+:::::::::::::::  solution
+
+## Solution
+
+The `ceiling` function rounds up to the nearest integer! 
+
+``` r
+ceiling(total_cost)
+```
+
+``` output
+[1] 29
+```
+
+To use the function to round to the nearest cent, you can do the following:
+
+``` r
+ceiling(total_cost * 100) / 100
+```
+
+``` output
+[1] 28.13
+```
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+## Vectors and Data Types
+
+A vector is the most common and basic data type in R, and is pretty much
+the workhorse of R. A vector is composed by a series of values, which can be
+either numbers, characters, or other data types. We can assign a series of values to a vector using
+the `c()` function. For example, we can create a vector of job type strings, and 
+we can create another vector storing numbers of votes at different precincts
+
+
+``` r
+votes_per_precinct <- c(1000, 4300, 2340, 7190)
+votes_per_precinct
+```
+
+``` output
+[1] 1000 4300 2340 7190
+```
+
+``` r
+job_types <- c("check-in", "check-out", "supervisor")
+job_types
+```
+
+``` output
+[1] "check-in"   "check-out"  "supervisor"
+```
+
+The quotes around "check-in", "check-out", and "supervisor"are essential here. 
+Without the quotes, R will assume there are objects called `check-in`, `check-out`, 
+and `supervisor`. Since these names don't exist in R's memory, there will be an 
+error message.
+
+Additionally, you may notice there are no commas in-between the thousands. In R, 
+you *cannot* add commas in numbers, as R will assume they are separate items in 
+the list.
+
+There are many functions that allow you to inspect the content of a
+vector. `length()` tells you how many elements are in a particular vector:
+
+``` r
+length(votes_per_precinct)
+```
+
+``` output
+[1] 4
+```
+
+An important feature of a vector is that all of the elements are the same type of data.
+The function `typeof()` indicates the type of an object:
+
+``` r
+typeof(votes_per_precinct)
+```
+
+``` output
+[1] "double"
+```
+
+The function `str()` provides an overview of the structure of an object and its
+elements. It is a useful function when working with large and complex
+objects:
+
+``` r
+str(votes_per_precinct)
+```
+
+``` output
+ num [1:4] 1000 4300 2340 7190
+```
+
+You can use the `c()` function to add other elements to your vector:
+
+``` r
+devices_per_precinct <- c(5, 2)
+devices_per_precinct <- c(devices_per_precinct, 9) # add to the end of the vector
+devices_per_precinct <- c(6, devices_per_precinct) # add to the beginning of the vector
+devices_per_precinct
+```
+
+``` output
+[1] 6 5 2 9
+```
+
+In the first line, we take the original vector `devices_per_precinct`, add the 
+value `9` to the end of it, and save the result back into `devices_per_precinct`. 
+Then we add the value `6` to the beginning, again saving the result back 
+into `devices_per_precinct`.
+
+We can do this over and over again to grow a vector, or assemble a data set.
+As we program, this may be useful to add results that we are collecting or
+calculating.
+
+An **atomic vector** is the simplest R **data type** and is a linear vector of a
+single type. Above, we saw 2 of the 6 main **atomic vector** types that R uses: 
+`"character"` and `"numeric"` (or `"double"`). These are the basic building blocks 
+that all R objects are built from. The other 4 **atomic vector** types are:
+
+- `"logical"` for `TRUE` and `FALSE` (the boolean data type)
+- `"integer"` for integer numbers (e.g., `2L`, the `L` indicates to R that it's an integer)
+- `"complex"` to represent complex numbers with real and imaginary parts (e.g.,
+  `1 + 4i`) and that's all we're going to say about them
+- `"raw"` for bit-streams (we won't be discussing this further)
+
+### Date Types
+
+Dates are a common data type that require special attention. In R, dates can be represented in two ways:
+
+1. As character strings (e.g., "2018-11-06 07:02:36", "11/06/2018 07:02:36")
+2. As Date or POSIXct objects which are special data types for dates and times
+
+When dates are stored as strings, they're treated like any other text:
+
+``` r
+checkin_times_as_strings <- c("2018-11-06 07:02:36", "2018-11-06 07:04:09", "2018-11-06 07:05:45")
+typeof(checkin_times_as_strings)
+```
+
+``` output
+[1] "character"
+```
+
+However, storing dates as proper Date or POSIXct objects offers several advantages:
+- You can perform arithmetic with dates (calculate time differences)
+- You can extract components like month, year, or day
+- You can easily format dates for display
+- You can sort dates chronologically
+
+
+To convert strings to Date or POSIXct objects, use the `as.POSIXct()` function:
+
+``` r
+#convert strings to POSIXct objects
+checkin_times <- as.POSIXct(checkin_times_as_strings, format = "%Y-%m-%d %H:%M:%S")
+typeof(checkin_times)
+```
+
+``` output
+[1] "double"
+```
+
+``` r
+class(checkin_times)
+```
+
+``` output
+[1] "POSIXct" "POSIXt" 
+```
+
+The following "leap year" scenario highlights the importance of using proper date 
+types. Consider the following example:
+
+``` r
+#BAD: using strings for date arithmetic
+date_start <- "2020-02-28"
+date_end <- "2020-03-01"
+
+#attempt to calculate the difference by converting strings to numeric days
+#here we use substr to extract the day portion in string format.
+#it draws the characters at position 9 to 10 and converts them to numeric
+difference_wrong <- as.numeric(substr(date_end, 9, 10)) - as.numeric(substr(date_start, 9, 10))
+difference_wrong #incorrect!
+```
+
+``` output
+[1] -27
+```
+
+In this example, we extract the day portion of the dates as strings and subtract them. While this works for simple cases, it fails to account for:
+- The transition between months (e.g., February to March).
+- Leap years (e.g., February 29 in 2020).
+
+Now, compare this with proper date types:
+
+``` r
+#GOOD: using Date for leap year handling
+date_start_correct <- as.Date(date_start)
+date_end_correct <- as.Date(date_end)
+
+difference_correct <- as.numeric(date_end_correct - date_start_correct)
+difference_correct #correctly computes 2 days, accounting for February 29 in the leap year
+```
+
+``` output
+[1] 2
+```
+
+Now, the number of days has been calculated properly!
+
+It's important to note that Date objects and POSIXct objects are not made equal 
+and, while we used the two types interchangeably above, you should ensure you choose
+the one that fits your data needs. The key differences between Date objects and 
+POSIXct objects can be seen below:
+- Date:
+  - Represents dates without time.
+  - Useful for operations where time is irrelevant (e.g., calculating the number of days between two dates).
+  - Stored as the number of days since January 1, 1970.
+- `POSIXct:
+  - Represents both date and time.
+  - Useful for operations involving time (e.g., calculating the number of seconds or hours between two timestamps).
+  - Stored as the number of seconds since January 1, 1970.
+  
+Using proper date types ensures that leap years and other calendar-specific rules 
+are handled correctly, making computations accurate and reliable.
+
+
+### Coercion
+
+An important characteristic of vectors is that they can only contain elements of 
+the same data type. If you attempt to combine different types in a vector, R will 
+automatically convert them to a single, common type - a process called "coercion". 
+This follows a hierarchy: character > numeric (double) > integer > logical.
+
+
+``` r
+# Coercion examples
+num_logical <- c(1, TRUE) # TRUE converted to 1
+typeof(num_logical)
+```
+
+``` output
+[1] "double"
+```
+
+``` r
+num_character <- c(1, "a") # 1 converted to "1"
+typeof(num_character)
+```
+
+``` output
+[1] "character"
+```
+
+``` r
+logical_character <- c(TRUE, "a") # TRUE converted to "TRUE"
+typeof(logical_character)
+```
+
+``` output
+[1] "character"
+```
+
+``` r
+tricky <- c(1, "2", TRUE) # Everything becomes character
+typeof(tricky)
+```
+
+``` output
+[1] "character"
+```
+
+R will always try to find a common data type that doesn't lose information. Typically,
+this means converting toward the more flexible type (with character being the most 
+flexible). 
+
+Note: Date/POSIXct will always be treated as "numeric" (days/seconds since 
+January 1st, 1970) when being coerced within a vector!
+
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+## Exercise
+
+1. Predict the resulting data type for this vector: `c(1.1, 2L, TRUE, "a")`
+
+2. Create a vector that contains: 
+   - The number 5
+   - The logical value FALSE
+   - The string "data"
+   
+   What is the resulting data type? Why?
+
+:::::::::::::::  solution
+
+## Solution
+
+1. The vector `c(1.1, 2L, TRUE, "a")` will have type "character" because character is the most flexible data type.
+
+2. The vector would be:
+
+``` r
+mixed <- c(5, FALSE, "data")
+typeof(mixed)
+```
+
+``` output
+[1] "character"
+```
+
+It has type "character" because R coerces all elements to the most flexible data type that includes all values.
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Vectors are one of the many **data structures** that R uses. Other important
+ones are lists (`list`), matrices , data frames (`data.frame`), tibbles 
+(`tbl`), factors (`factor`) and arrays (`array`).
+
+
+## Subsetting vectors
+
+Subsetting (sometimes referred to as extracting or indexing) involves accessing 
+one or more values based on their numeric placement or "index" within a vector. 
+If we want to subset one or several values from a vector, we must provide one 
+index or several indices in square brackets. For instance:
+
+``` r
+job_types <- c("check-in", "check-out", "supervisor")
+job_types[2]
+```
+
+``` output
+[1] "check-out"
+```
+
+``` r
+job_types[c(3, 2)]
+```
+
+``` output
+[1] "supervisor" "check-out" 
+```
+
+We can also repeat the indices to create an object with more elements than the
+original one:
+
+``` r
+more_jobs <- job_types[c(1, 2, 3, 2, 1, 3)]
+more_jobs
+```
+
+``` output
+[1] "check-in"   "check-out"  "supervisor" "check-out"  "check-in"  
+[6] "supervisor"
+```
+
+### Conditional subsetting
+
+Another common way of subsetting is by using a logical vector. `TRUE` will
+select the element with the same index, while `FALSE` will not:
+
+
+``` r
+votes_per_precinct <- c(1000, 4300, 2340, 7190)
+votes_per_precinct[c(TRUE, FALSE, TRUE, TRUE)]
+```
+
+``` output
+[1] 1000 2340 7190
+```
+
+Typically, these logical vectors are not typed by hand, but are the output of
+other functions or logical tests. For instance, if you wanted to select only the
+values greater than 2500:
+
+``` r
+votes_per_precinct > 2500    # will return logicals with TRUE for the indices that meet the condition
+```
+
+``` output
+[1] FALSE  TRUE FALSE  TRUE
+```
+
+``` r
+## so we can use this to select only the values greater than 2866
+votes_per_precinct[votes_per_precinct > 2500]
+```
+
+``` output
+[1] 4300 7190
+```
+
+You can combine multiple tests using `&` (both conditions are true, AND) or `|`
+(at least one of the conditions is true, OR):
+
+``` r
+votes_per_precinct[votes_per_precinct < 2000 | votes_per_precinct > 4000]
+```
+
+``` output
+[1] 1000 4300 7190
+```
+
+``` r
+votes_per_precinct[votes_per_precinct >= 2000 & votes_per_precinct <= 4000]
+```
+
+``` output
+[1] 2340
+```
+
+Here, `<` stands for "less than", `>` for "greater than", `>=` for "greater than
+or equal to", and `==` for "equal to". The double equal sign `==` is a test for
+numerical equality between the left and right-hand sides, and should not be
+confused with the single `=` sign, which performs variable assignment (similar
+to `<-`).
+
+A common task is to search for certain strings in a vector. One could use the
+"or" operator `|` to test for equality to multiple values, but this can quickly
+become tedious.
+
+
+``` r
+job_types <- c("check-in", "check-out", "supervisor")
+job_types[job_types == "check-in" | job_types == "check-out"] # returns both check-in and check-out
+```
+
+``` output
+[1] "check-in"  "check-out"
+```
+
+The function `%in%` allows you to test if any of the elements of a search vector
+(on the left-hand side) are found in the target vector (on the right-hand side):
+
+``` r
+job_types %in% c("check-in", "check-out")
+```
+
+``` output
+[1]  TRUE  TRUE FALSE
+```
+
+Note that the output is the same length as the search vector on the left-hand
+side, because `%in%` checks whether each element of the search vector is found
+somewhere in the target vector. Thus, you can use `%in%` to select the elements
+in the search vector that appear in your target vector:
+
+``` r
+job_types[job_types %in% c("check-in", "check-out")]
+```
+
+``` output
+[1] "check-in"  "check-out"
+```
+
+## Missing Data
+
+As R was designed to analyze data sets, it includes the concept of missing data
+(which is uncommon in other programming languages). Missing data are represented
+in vectors as `NA`.
+
+When doing operations on numbers, most functions will return `NA` if the data
+you are working with include missing values. This feature
+makes it harder to overlook the cases where you are dealing with missing data.
+You can add the argument `na.rm = TRUE` to calculate the result while ignoring
+the missing values.
+
+
+``` r
+#create vector
+checkin_lengths <- c(64, 74, NA, 287)
+
+#calc with NA
+mean(checkin_lengths)
+```
+
+``` output
+[1] NA
+```
+
+``` r
+max(checkin_lengths)
+```
+
+``` output
+[1] NA
+```
+
+``` r
+#calc without NA
+mean(checkin_lengths, na.rm = TRUE)
+```
+
+``` output
+[1] 141.6667
+```
+
+``` r
+max(checkin_lengths, na.rm = TRUE)
+```
+
+``` output
+[1] 287
+```
+
+If your data include missing values, you may want to become familiar with the
+functions `is.na()`, `na.omit()`, and `complete.cases()`. See below for
+examples:
+
+``` r
+## Extract those elements which are not missing values.
+## The ! character is also called the NOT operator
+checkin_lengths[!is.na(checkin_lengths)]
+```
+
+``` output
+[1]  64  74 287
+```
+
+``` r
+## Count the number of missing values.
+## The output of is.na() is a logical vector (TRUE/FALSE equivalent to 1/0) so the sum() function here is effectively counting
+sum(is.na(checkin_lengths))
+```
+
+``` output
+[1] 1
+```
+
+``` r
+## Returns the object with incomplete cases removed. The returned object is an atomic vector of type `"numeric"` (or `"double"`).
+na.omit(checkin_lengths)
+```
+
+``` output
+[1]  64  74 287
+attr(,"na.action")
+[1] 3
+attr(,"class")
+[1] "omit"
+```
+
+``` r
+## Extract those elements which are complete cases. The returned object is an atomic vector of type `"numeric"` (or `"double"`).
+checkin_lengths[complete.cases(checkin_lengths)]
+```
+
+``` output
+[1]  64  74 287
+```
+
+Recall that you can use the `typeof()` function to find the type of your atomic vector.
+
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+## Exercise
+
+1. Using this vector of check-in lengths, create a new vector with the NAs removed.
+
+```r
+checkin_lengths <- c(54, 21, 74, 65, NA, 72, 21, 16, 46, 58, 43, 61, 39, 19, NA, 24)
+```
+
+2. Use the function `median()` to calculate the median of the `checkin_lengths` vector.
+
+3. Use R to figure out how many check-ins took longer than 55 seconds.
+
+:::::::::::::::  solution
+
+## Solution
+
+
+``` r
+#1.
+checkin_lengths <- c(54, 21, 74, 65, NA, 72, 21, 16, 46, 58, 43, 61, 39, 19, NA, 24)
+checkin_lengths_no_na <- checkin_lengths[!is.na(checkin_lengths)]
+# or
+checkin_lengths_no_na <- na.omit(checkin_lengths)
+
+# 2.
+median(checkin_lengths, na.rm = TRUE)
+```
+
+``` output
+[1] 44.5
+```
+
+``` r
+# 3.
+checkin_lengths_above_55 <- checkin_lengths_no_na[checkin_lengths_no_na > 55]
+length(checkin_lengths_above_55)
+```
+
+``` output
+[1] 5
+```
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:::::::::::::::::::::::::::::::::::::::: keypoints
+
+- Access individual values by location using `[]`.
+- Access arbitrary sets of data using `[c(...)]`.
+- Use logical operations and logical vectors to access subsets of data.
+- Use proper date types (Date and POSIXct) instead of strings for date arithmetic.
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
