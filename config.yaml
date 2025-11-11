@@ -10,11 +10,11 @@
 # incubator: The Carpentries Incubator
 # Note that you can also use a custom carpentry type. For more info,
 # see the documentation: https://carpentries.github.io/sandpaper-docs/editing.html
-carpentry: 'incubator'
+carpentry: 'edi-plej'
 
 # Custom carpentry description
 # This will be used as the alt text for the logo
-# carpentry_description: "Custom Carpentry"
+carpentry_description: "Engineering For Democracy and Partnership for Large Election Jurisdictions"
 
 # Overall title for pages.
 title: 'Data Empowerment for Election Workers'
@@ -90,4 +90,6 @@ profiles:
 # This space below is where custom yaml items (e.g. pinning
 # sandpaper and varnish versions) should live
 
+
+varnish: EngineeringForDemocracy/varnish
 
