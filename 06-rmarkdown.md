@@ -853,7 +853,7 @@ one back-tick (`` `r` ``), whereas code chunks use three back-ticks
 (```` ```r``` ````).
 
 For example, today's date is ``` `r Sys.Date()` ```, will be rendered as: 
-today's date is 2025-11-11. The code will display today's date in the output 
+today's date is 2025-11-12. The code will display today's date in the output 
 document (or, technically, the date the document was last knitted).
 
 The best way to use in-line R code is by preparing the output in code chunks, 
